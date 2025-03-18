@@ -8,3 +8,9 @@ The Project is currently divided into 4 modules as follows:
 4. **Sanitization Engine:** consolidates all flags from the contamination detector and membership inference checker, and then cleans the data accordingly. It ensures that by the end of the pipeline, the training data is sanitized – free of known contamination, duplicates, and high-risk memorization content.
 
 My first approach is to develop an MVP for each of the modules starting with data preprocessor and then add complexity in the project.
+
+The working-preprocessed dataset is over 45GB so it is not stored over Git but only locally. 
+
+# Data Preprocessor:
+In this module, I have mostly focused on Data cleaning, Normalization and getting the data ready for the Further processing steps. 
+Most of the explanations are given in the [data_preprocessor file](data_preprocessor.ipynb)
