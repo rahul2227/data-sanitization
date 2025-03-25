@@ -13,4 +13,16 @@ The working-preprocessed dataset is over 45GB so it is not stored over Git but o
 
 # Data Preprocessor:
 In this module, I have mostly focused on Data cleaning, Normalization and getting the data ready for the Further processing steps. 
-Most of the explanations are given in the [data_preprocessor file](data_preprocessor.ipynb)
+Most of the explanations are given in the [Data Preprocessor file](../data_preprocessor.ipynb)
+
+# Contamination Detector:
+According to the seminar and project scope we have performed two main scopes.
+1. **Reference Benchmark Comparison** 
+2. **PaCoST-Inspired Confidence Testing**
+
+With in this module implementation I have majorly tested the contamination strategy, because the preliminary step of data preprocessing was already done
+this module tacked the contamination step and flagging of contaminated dataset. 
+
+As of right now, this was done with a manually defined dataset(or just a small list of string), but I plan to replace that by a more extensive benchmark dataset.
+
+More details on the module is present in the notebook [Contamination detection file](../contamination_detector.ipynb)
