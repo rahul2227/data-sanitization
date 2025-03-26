@@ -13,7 +13,7 @@ The working-preprocessed dataset is over 45GB so it is not stored over Git but o
 
 # Data Preprocessor:
 In this module, I have mostly focused on Data cleaning, Normalization and getting the data ready for the Further processing steps. 
-Most of the explanations are given in the [Data Preprocessor file](../data_preprocessor.ipynb)
+Most of the explanations are given in the [Data Preprocessor file](../Exploratory%20notebooks/data_preprocessor.ipynb)
 
 # Contamination Detector:
 According to the seminar and project scope we have performed two main scopes.
@@ -25,4 +25,30 @@ this module tacked the contamination step and flagging of contaminated dataset.
 
 As of right now, this was done with a manually defined dataset(or just a small list of string), but I plan to replace that by a more extensive benchmark dataset.
 
-More details on the module is present in the notebook [Contamination detection file](../contamination_detector.ipynb)
+More details on the module is present in the notebook [Contamination detection file](../Exploratory%20notebooks/contamination_detector.ipynb)
+
+# Membership Inference Checker:
+Initially we implemented this with coherence of Data Preprocessor module, this time we have removed redundant code and made improvements in computational management.
+
+According to the MIA, we wanted to check the risk level on the data, with the help of visualisation we were able to undertand better the data distributions and flags. Now I think we will need to implement a refined data_preprocessing module to make this notebook more aligned with project goals.
+
+# Project Restructure
+Once the basic modules of the pipelines are explored we have committed an updated folder structure to manage the project
+
+- Updated the readme for the project
+
+### Preprocessor Module
+Added the code from the [Data Preprocessor file](../Exploratory%20notebooks/data_preprocessor.ipynb) and converted it into a data_preprocessing module implementation.
+
+**How It Works**
+
+1. cleaning.py: Provides normalize_text with optional stopword removal for more uniform text.
+2.	tokenization.py: Uses Hugging Face’s AutoTokenizer to tokenize text.
+3.	deduplication.py: Removes exact duplicates based on the cleaned text.
+4.	segmentation.py: Segments the text into sentences (or fixed token-length chunks) and explodes the dataframe.
+5.	main.py: Ties all steps together. It:
+- Loads a dataset from Hugging Face, 
+- Caps its size by cumulative bytes, 
+- Normalizes, tokenizes, and deduplicates the text, 
+- Segments the cleaned text, 
+- And saves the processed data as a CSV file.
