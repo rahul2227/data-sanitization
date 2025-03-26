@@ -62,7 +62,7 @@ cd src/Preprocessor/
 
 and run the following command for the execution of the preprocessing module. 
 
-> **Note:** If you are following the same folder structure as above you just need to run the following command, else you need to enter the aruguements for data directories to not have 
+> **Note:** If you are following the same folder structure as above you just need to run the following command, else you need to enter the arguments for data directories to not have 
 > further problems
 
 ```bash
