@@ -26,3 +26,8 @@ this module tacked the contamination step and flagging of contaminated dataset.
 As of right now, this was done with a manually defined dataset(or just a small list of string), but I plan to replace that by a more extensive benchmark dataset.
 
 More details on the module is present in the notebook [Contamination detection file](../contamination_detector.ipynb)
+
+# Membership Inference Checker:
+Initially we implemented this with coherence of Data Preprocessor module, this time we have removed redundant code and made improvements in computational management.
+
+According the MIA, we wanted to check the risk level on the data, with the help of visualisation we were able to undertand better the data distributions and flags. Now I think we will need to implement a refined data_preprocessing module to make this notebook more aligned with project goals.
