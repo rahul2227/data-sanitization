@@ -30,9 +30,25 @@ More details on the module is present in the notebook [Contamination detection f
 # Membership Inference Checker:
 Initially we implemented this with coherence of Data Preprocessor module, this time we have removed redundant code and made improvements in computational management.
 
-According the MIA, we wanted to check the risk level on the data, with the help of visualisation we were able to undertand better the data distributions and flags. Now I think we will need to implement a refined data_preprocessing module to make this notebook more aligned with project goals.
+According to the MIA, we wanted to check the risk level on the data, with the help of visualisation we were able to undertand better the data distributions and flags. Now I think we will need to implement a refined data_preprocessing module to make this notebook more aligned with project goals.
 
 # Project Restructure
 Once the basic modules of the pipelines are explored we have committed an updated folder structure to manage the project
 
 - Updated the readme for the project
+
+### Preprocessor Module
+Added the code from the [Data Preprocessor file](../Exploratory%20notebooks/data_preprocessor.ipynb) and converted it into a data_preprocessing module implementation.
+
+**How It Works**
+
+1. cleaning.py: Provides normalize_text with optional stopword removal for more uniform text.
+2.	tokenization.py: Uses Hugging Face’s AutoTokenizer to tokenize text.
+3.	deduplication.py: Removes exact duplicates based on the cleaned text.
+4.	segmentation.py: Segments the text into sentences (or fixed token-length chunks) and explodes the dataframe.
+5.	main.py: Ties all steps together. It:
+- Loads a dataset from Hugging Face, 
+- Caps its size by cumulative bytes, 
+- Normalizes, tokenizes, and deduplicates the text, 
+- Segments the cleaned text, 
+- And saves the processed data as a CSV file.
