@@ -41,3 +41,30 @@ cd data-sanitization
 ```bash
 conda env create -f environment.yml 
 ```
+
+## Data Preprocessor module
+
+This module downloads and works on the opensource data opensource [wikitext-103-raw-v1 dataset from huggingface](https://huggingface.co/datasets/iohadrubin/wikitext-103-raw-v1).
+
+The general idea is that this script performs data preprocessing on a raw text dataset by:
+  - Loading a dataset (default: wikitext-103-raw-v1 from Hugging Face).
+  - Capping the dataset size based on a maximum number of bytes.
+  - Cleaning and normalizing text.
+  - Tokenizing the cleaned text.
+  - Removing duplicate entries.
+  - Segmenting text into smaller units (sentences or fixed-length chunks).
+  - Saving the preprocessed data as a CSV file.
+
+To preprocess the data you need to go to the following directory
+```bash
+cd src/Preprocessor/
+```
+
+and run the following command for the execution of the preprocessing module. 
+
+> **Note:** If you are following the same folder structure as above you just need to run the following command, else you need to enter the aruguements for data directories to not have 
+> further problems
+
+```bash
+ python3 preprocessor_main.py --remove-stopwords
+```
