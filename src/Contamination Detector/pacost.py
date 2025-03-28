@@ -37,8 +37,8 @@ def load_language_model(model_name=DEFAULT_LM_MODEL_NAME):
     model = AutoModelForCausalLM.from_pretrained(model_name)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model.eval()
-    if torch.cuda.is_available():
-        model.to("cuda")
+    if torch.mps.is_available():
+        model.to("mps")
     return model, tokenizer
 
 
@@ -56,8 +56,8 @@ def compute_perplexity(text, model, tokenizer):
     """
     try:
         encodings = tokenizer(text, return_tensors='pt')
-        if torch.cuda.is_available():
-            encodings = {k: v.to("cuda") for k, v in encodings.items()}
+        if torch.mps.is_available():
+            encodings = {k: v.to("mps") for k, v in encodings.items()}
         with torch.no_grad():
             outputs = model(**encodings, labels=encodings["input_ids"])
         loss = outputs.loss
