@@ -21,6 +21,7 @@ import os
 import argparse
 import pandas as pd
 from datasets import load_dataset
+from pygments.lexer import default
 
 from cleaning import normalize_text
 from tokenization import tokenize_text
@@ -32,7 +33,7 @@ DEFAULT_DATASET_NAME = "iohadrubin/wikitext-103-raw-v1"
 DEFAULT_SPLIT = "train"
 DEFAULT_MAX_BYTES = 25 * 1024 * 1024 * 1024  # 25GB in bytes
 DEFAULT_SEGMENT_MODE = "sentence"
-DEFAULT_OUTPUT_FILENAME = "preprocessed_wikitext103_subset.csv"
+DEFAULT_OUTPUT_FILENAME = "preprocessed_wikitext103_subset_3414.csv"
 
 
 def cap_dataset_by_bytes(df, max_bytes):
@@ -80,7 +81,7 @@ def preprocess_dataset(args):
 
 def main():
     parser = argparse.ArgumentParser(description="Data Preprocessing Module")
-    parser.add_argument("--output-dir", type=str, default="../data",
+    parser.add_argument("--output-dir", type=str, default="data",
                         help="Directory to save the preprocessed CSV file (default: ../data)")
     parser.add_argument("--output-filename", type=str, default=DEFAULT_OUTPUT_FILENAME,
                         help=f"Output CSV filename (default: {DEFAULT_OUTPUT_FILENAME})")
@@ -88,7 +89,7 @@ def main():
                         help="Maximum dataset size in bytes (default: 25GB)")
     parser.add_argument("--segment-mode", type=str, choices=["sentence", "fixed", "none"],
                         default=DEFAULT_SEGMENT_MODE, help="Segmentation mode (default: sentence)")
-    parser.add_argument("--segment-limit", type=int, default=None,
+    parser.add_argument("--segment-limit", type=int, default=3414,
                         help="Optional limit on the number of segmented rows to keep (default: all)")
     parser.add_argument("--remove-stopwords", action="store_true", default=False,
                         help="Optionally remove stopwords during normalization")
@@ -98,8 +99,11 @@ def main():
 
     os.makedirs(args.output_dir, exist_ok=True)
     output_path = os.path.join(args.output_dir, args.output_filename)
-    df_processed.to_csv(output_path, index=False)
-    print(f"Preprocessed data saved to {output_path}")
+    try:
+        df_processed.to_csv(output_path, index=False)
+        print(f"Preprocessed data saved to {output_path}")
+    except Exception as e:
+        print("Data was not saved properly: {}".format(e))
 
 
 if __name__ == "__main__":
