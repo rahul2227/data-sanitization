@@ -139,7 +139,7 @@ def main():
                         help="Threshold for high similarity to flag duplicates (default: 0.95).")
     parser.add_argument("--low-sim-threshold", type=float, default=0.3,
                         help="Threshold for low similarity to flag outliers (default: 0.3).")
-    parser.add_argument("--plots-dir", type=str, default="data/plots/membership_module_plots",
+    parser.add_argument("--plots-dir", type=str, default="results/plots/membership_module_plots",
                         help="Directory to save membership inference plots.")
     args = parser.parse_args()
 
