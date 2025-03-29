@@ -98,3 +98,6 @@ To know more about other parameters you can look through [Sanitization main](./s
 > (This is especially true for contamination module when run within full sanitization pipeline).
 > 
 > This warning is there because it freezes the CLI without any output for some time leading to confusion(but have faith I guess that it is running 😅)
+
+
+> **Disclaimer:** GitHub Copilot is used only for validating pull requests and not for authoring any code. This can be easily verified by seeing commit history.
