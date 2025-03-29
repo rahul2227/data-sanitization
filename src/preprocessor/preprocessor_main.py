@@ -49,9 +49,14 @@ def cap_dataset_by_bytes(df, max_bytes):
 
 def preprocess_dataset(args):
     print("Loading dataset...")
-    dataset = load_dataset(DEFAULT_DATASET_NAME, split=DEFAULT_SPLIT)
-    df = pd.DataFrame(dataset)
-    print(f"Original dataset rows: {len(df)}")
+    if args.input_path is None:
+        dataset = load_dataset(DEFAULT_DATASET_NAME, split=DEFAULT_SPLIT)
+        df = pd.DataFrame(dataset)
+        print(f"Original dataset rows: {len(df)}")
+    else :
+        data_file = args.input_path
+        df = pd.read_csv(data_file)
+        print(f"Original dataset rows: {len(df)}")
 
     print("Capping dataset size...")
     df = cap_dataset_by_bytes(df, args.max_bytes)
@@ -83,6 +88,8 @@ def main():
     parser = argparse.ArgumentParser(description="Data Preprocessing Module")
     parser.add_argument("--output-dir", type=str, default="data",
                         help="Directory to save the preprocessed CSV file (default: ../data)")
+    parser.add_argument("--input-path", type=str, default=None,
+                        help="Input path for Raw data")
     parser.add_argument("--output-filename", type=str, default=DEFAULT_OUTPUT_FILENAME,
                         help=f"Output CSV filename (default: {DEFAULT_OUTPUT_FILENAME})")
     parser.add_argument("--max-bytes", type=int, default=DEFAULT_MAX_BYTES,
