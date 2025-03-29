@@ -57,7 +57,7 @@ Added the code from the [Data Preprocessor file](../Exploratory%20notebooks/data
 This is the module which identifies the data that should not be there such as leaked evaluation benchmarks or any data that overlaps with a reference set.
 inspiration from the PaCoST approach (Paired Confidence Significance Testing) to flag contaminated data statistically. The key steps and methods are:
 
-- **Reference Benchmark Comparison:**
-- **PaCoST-Inspired Statistical Testing:**
-- **Confidence Threshold Calibration:**
-- **Flagging and Reporting:** 
+- **Reference Benchmark Comparison**
+- **PaCoST-Inspired Statistical Testing**
+- **Confidence Threshold Calibration**
+- **Flagging and Reporting** 
