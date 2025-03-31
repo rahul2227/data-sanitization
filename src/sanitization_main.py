@@ -5,41 +5,8 @@ import logging
 import os
 import time
 import pandas as pd
-import logging
-import subprocess
-import sys
-
-def run_command(command):
-    logging.info(f"Running: {' '.join(command)}")
-    result = subprocess.run(command, capture_output=True, text=True)
-    if result.returncode != 0:
-        logging.error(f"Error running {' '.join(command)}: {result.stderr}")
-        sys.exit(result.returncode)
-    else:
-        logging.info(result.stdout)
-
-def run_full_pipeline(args):
-    """
-    Runs the entire pipeline sequentially by invoking the other modules via subprocess.
-    """
-
-    logging.info("Starting Full Data Sanitization Pipeline")
-
-    # Step 1: Preprocessing
-    if args.use_default_raw_data:
-        run_command([
-            sys.executable, "src/preprocessor/preprocessor_main.py",
-            "--output-dir", "data",
-            "--remove-stopwords",
-        ])
-    elif args.raw_data_path is not None:
-        run_command([
-            sys.executable, "src/preprocessor/preprocessor_main.py",
-            "--output-dir", "data",
-            "--input-path", args.raw_data_path,
-            "--remove-stopwords",
-        ])
-
+from sanitization_engine.manager import run_full_pipeline
+from sanitization_engine.sanitizer import aggregate_flags, sanitize_data
 
 
 def main():
@@ -68,15 +35,33 @@ def main():
     logging.info("Starting Data Sanitization step.")
 
     # Load necessary data
-    preprocessed_path = "../data/preprocessed_wikitext103_subset.csv"
-    contamination_path = "../data/contamination_flags.csv"
-    membership_path = "../data/membership_inference_flags.csv"
+    # preprocessed_path = "../data/preprocessed_wikitext103_subset.csv"
+    # contamination_path = "../data/contamination_flags.csv"
+    # membership_path = "../data/membership_inference_flags.csv"
+    # for testing purposes
+    preprocessed_path = "data/preprocessed_wikitext103_subset_3414.csv"
+    contamination_path = "data/contamination_flags_3414.csv"
+    membership_path = "data/membership_inference_flags_3414.csv"
 
     df_preprocessed = pd.read_csv(preprocessed_path)
     df_contamination = pd.read_csv(contamination_path)
     df_membership = pd.read_csv(membership_path)
 
+    flagged_indices, flag_reason = aggregate_flags(df_contamination, df_membership)
 
+    logging.info(f"Total flagged segments: {len(flagged_indices)}")
+
+    sanitized_df, log_df = sanitize_data(df_preprocessed, flagged_indices, flag_reason, args.sanitization_action)
+
+    # Ensure output directories exist
+    os.makedirs(os.path.dirname(args.sanitized_output), exist_ok=True)
+    os.makedirs(os.path.dirname(args.sanitization_log), exist_ok=True)
+
+    sanitized_df.to_csv(args.sanitized_output, index=False)
+    logging.info(f"Sanitized dataset saved: {args.sanitized_output}")
+
+    log_df.to_csv(args.sanitization_log, index=False)
+    logging.info(f"Sanitization log saved: {args.sanitization_log}")
 
     end_time = time.perf_counter()
     logging.info(f"Sanitization pipeline completed in {end_time - start_time:.2f}s")
