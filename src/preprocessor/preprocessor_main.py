@@ -22,6 +22,7 @@ import argparse
 import pandas as pd
 from datasets import load_dataset
 from pygments.lexer import default
+from tqdm import tqdm
 
 from cleaning import normalize_text
 from contamination_simulator import contaminate_text
@@ -56,7 +57,23 @@ def preprocess_dataset(args):
         print(f"Original dataset rows: {len(df)}")
     else :
         data_file = args.input_path
-        df = pd.read_csv(data_file)
+        # df = pd.read_csv(data_file)
+        # loading in chunks
+        with open(data_file, 'r', encoding='utf-8', errors='ignore') as f:
+            total_lines = sum(1 for line in f) - 1
+
+        chunk_size = 10000  # adjust chunk size as needed
+        total_chunks = total_lines // chunk_size
+
+        # Read CSV in chunks and display progress
+        chunks = []
+        for chunk in tqdm(pd.read_csv(data_file, on_bad_lines='skip', engine='python', chunksize=chunk_size),
+                          total=total_chunks,
+                          desc="Loading CSV"):
+            chunks.append(chunk)
+
+        # Combine all chunks into one DataFrame
+        df = pd.concat(chunks, ignore_index=True)
         print(f"Original dataset rows: {len(df)}")
 
     print("Capping dataset size...")
@@ -81,6 +98,9 @@ def preprocess_dataset(args):
 
     print(f"Segmenting text using mode: {args.segment_mode}")
     df_segmented = segment_dataframe(df, text_column='cleaned_text', mode=args.segment_mode)
+
+    print("Dropping columns that are not needed anymore...")
+    df_segmented.drop(columns=['text', 'cleaned_text'], inplace=True)
 
     if args.segment_limit:
         df_segmented = df_segmented.iloc[:args.segment_limit].copy()
