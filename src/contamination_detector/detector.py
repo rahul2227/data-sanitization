@@ -18,6 +18,7 @@ import os
 import argparse
 import logging
 import pandas as pd
+from datasets import load_dataset
 from tqdm import tqdm
 
 from reference_comparison import load_reference_data, check_reference_similarity
@@ -39,11 +40,14 @@ def detect_contamination(args):
         with open(args.reference_file, 'r') as f:
             reference_texts = [line.strip() for line in f if line.strip()]
     else:
-        reference_texts = [
-            "this is a known contaminated text from benchmark dataset",
-            "another reference text that should not be in the training data",
-            "benchmark evaluation text that must remain separate"
-        ]
+        # reference_texts = [
+        #     "this is a known contaminated text from benchmark dataset",
+        #     "another reference text that should not be in the training data",
+        #     "benchmark evaluation text that must remain separate"
+        # ]
+        pg19_dataset = load_dataset("deepmind/pg19", split="train")
+        reference_texts = pg19_dataset["text"]
+
     ref_model, ref_embeddings = load_reference_data(reference_texts, model_name=args.ref_model_name)
 
     # Setup language model for confidence testing

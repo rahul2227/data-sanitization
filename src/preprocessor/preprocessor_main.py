@@ -24,6 +24,7 @@ from datasets import load_dataset
 from pygments.lexer import default
 
 from cleaning import normalize_text
+from contamination_simulator import contaminate_text
 from tokenization import tokenize_text
 from deduplication import remove_duplicates
 from segmentation import segment_dataframe
@@ -61,6 +62,12 @@ def preprocess_dataset(args):
     print("Capping dataset size...")
     df = cap_dataset_by_bytes(df, args.max_bytes)
     print(f"Rows after capping: {len(df)}")
+
+    if args.sim_contamination:
+        print("Contaminating dataset...")
+        contam_indices = df.sample(frac=0.2, random_state=42).index
+        df.loc[contam_indices, 'text'] = df.loc[contam_indices, 'text'].apply(contaminate_text)
+        print("finished dataset contamination")
 
     print("Normalizing text...")
     df['cleaned_text'] = df['text'].apply(lambda x: normalize_text(x, remove_stopwords=args.remove_stopwords))
@@ -100,6 +107,8 @@ def main():
                         help="Optional limit on the number of segmented rows to keep (default: all)")
     parser.add_argument("--remove-stopwords", action="store_true", default=False,
                         help="Optionally remove stopwords during normalization")
+    parser.add_argument("--sim-contamination", action="store_true", default=True,
+                        help="Simulate the contamination of the dataset (default: True)")
     args = parser.parse_args()
 
     df_processed = preprocess_dataset(args)
