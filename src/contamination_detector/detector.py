@@ -45,8 +45,8 @@ def detect_contamination(args):
         #     "another reference text that should not be in the training data",
         #     "benchmark evaluation text that must remain separate"
         # ]
-        pg19_dataset = load_dataset("deepmind/pg19", split="train")
-        reference_texts = pg19_dataset["text"]
+        pg19_passages = load_dataset("deepmind/pg19", split="train", num_proc=10, trust_remote_code=True)
+        reference_texts = pg19_passages["text"]
 
     ref_model, ref_embeddings = load_reference_data(reference_texts, model_name=args.ref_model_name)
 
